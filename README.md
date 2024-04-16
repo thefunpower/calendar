@@ -56,6 +56,13 @@ return \calendar_table::ajax([
 
 请自行复制 `css.css`
 
+## action用法
+
+~~~
+do_action("calendar_table", $data);
+~~~
+
+
 ## 效果图
 
 ![效果图](test/demo.png)

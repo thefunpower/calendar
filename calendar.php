@@ -51,8 +51,12 @@ class calendar_table
             'holiday' => $holiday,
             'workday' => $workday,
         ]);
+        $data = array_values($data);
+        if(function_exists('do_action')) {
+            do_action("calendar_table", $data);
+        }
         return json_success([
-            'data' => array_values($data),
+            'data' => $data,
             'year' => $year,
             'month' => $month,
         ]);
@@ -63,6 +67,10 @@ class calendar_table
     public static function create($opt)
     {
         global $vue;
+        if(!$vue) {
+            echo "请先安装 composer require thefunpower/vue";
+            exit;
+        }
         $url   = $opt['url'] ?: self::get('url');
         $year  = $opt['year'];
         $month = $opt['month'];
@@ -255,7 +263,6 @@ class calendar_table
         $next =  self::gen_calendar($arr[0], $arr[1]);
         $cur = self::_gen_calendar_append($pre, $cur, 'pre');
         $cur = self::_gen_calendar_append($next, $cur, 'next');
-
         foreach($cur as $k => $v) {
             foreach($v as $kk => $vv) {
                 if($kk == 0) {
