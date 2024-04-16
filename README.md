@@ -8,23 +8,24 @@ composer require thefunpower/calendar
 
 ## 使用
 
+- 输出HTML代码
+
 ~~~
-$year = 2026;
-$month = 4; 
-$calendar = gen_calendar_table([
+$year = 2024;
+$month = 4;  
+
+$calendar = calendar_table::create([
+  'url'=>'/attend/config/ajax',
   'year'=>$year,
-  'month'=>$month,
-  'usually'=>[1,2,3,4,5],
-  'holiday'=>['2026-04-01','2026-04-08'],
-  'workday'=>['2026-04-05','2026-04-18','2026-04-25',],
+  'month'=>$month, 
   'html'=>1,
-  'click'=>'calendar',
-  'vue_data_name'=>'calendar_data',
+  'click'=>'calendar', 
 ]); 
 
 $vue->method("calendar(date)"," 
+  this.calendar_click_li_actived = date;
   console.log(date);
-");
+"); 
 ~~~
 
 输出
@@ -32,10 +33,32 @@ $vue->method("calendar(date)","
 ~~~
 <?=$calendar?>
 ~~~
+- 使用AJAX数据
+~~~
+$year = g("year");
+$month = g("month");
+$type = g("type");
+//设置企业工作日，一般周一到周五,如果周六上班对应数字6，周日上班对应数字7 
+\calendar_table::set("usually",[1,2,3,4,5]);
+//设置法定节假日
+\calendar_table::set("holiday",['2024-04-10','2024-04-11']);
+//设置补班日，周末原本是休息，因节假日调整为上班的
+\calendar_table::set("workday",['2024-04-14','2024-04-18']);  
+return \calendar_table::ajax([
+    'year'=>$year,
+    'month'=>$month,
+    'usually'=>$usually,
+    'type'=>$type,
+]);
+~~~
 
-更新 `calendar_data` 值页面数据将自动更新
+## css
 
+请自行复制 `css.css`
 
+## 效果图
+
+![效果图](test/demo.png)
   
 
 ### 开源协议 
