@@ -282,7 +282,7 @@ class calendar_table
     public static function gen_calendar($year, $month)
     {
         $workday = self::get('usually') ?: [1,2,3,4,5];
-        $weekend = array_diff([1,2,3,4,5,6,7], $workday);
+        $weekend = array_diff([1,2,3,4,5,6,0], $workday);
         $calendar = array();
         // 获取指定年份和月份的第一天和最后一天
         $first_day = mktime(0, 0, 0, $month, 1, $year);

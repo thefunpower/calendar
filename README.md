@@ -44,7 +44,7 @@ $vue->method("calendar(date)","
 $year = g("year");
 $month = g("month");
 $type = g("type");
-//设置企业工作日，一般周一到周五,如果周六上班对应数字6，周日上班对应数字7 
+//设置企业工作日，一般周一到周五,如果周六上班对应数字6，周日上班对应数字0
 \calendar_table::set("usually",[1,2,3,4,5]);
 //设置法定节假日
 \calendar_table::set("holiday",['2024-04-10','2024-04-11']);
@@ -66,6 +66,19 @@ return \calendar_table::ajax([
 
 ~~~
 do_action("calendar_table", $data);
+~~~
+
+处理
+~~~
+add_action("calendar_table", function(&$data)use($holiday,$holidays,$work) { 
+    foreach($data as &$v){
+        foreach($v as &$vv){ 
+            if( $holiday && in_array( $vv['full'],$holiday) ){
+                $vv['title'] = $holidays[$vv['full']];
+            }
+        }
+    }
+});
 ~~~
 
 
