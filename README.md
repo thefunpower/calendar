@@ -3,7 +3,13 @@
 ## 安装
 
 ~~~
-composer require thefunpower/calendar
+composer require thefunpower/calendar  
+~~~
+
+依赖`thefunpower/vue`
+
+~~~
+composer require thefunpower/vue
 ~~~
 
 ## 使用
