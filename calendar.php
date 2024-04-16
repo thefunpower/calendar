@@ -67,10 +67,6 @@ class calendar_table
     public static function create($opt)
     {
         global $vue;
-        if(!$vue) {
-            echo "请先安装 composer require thefunpower/vue";
-            exit;
-        }
         $url   = $opt['url'] ?: self::get('url');
         $year  = $opt['year'];
         $month = $opt['month'];
@@ -117,7 +113,6 @@ class calendar_table
         $html  = $opt['html'];
         $click = $opt['click'];
         $data = self::gen_calendar_data($year, $month);
-
         $d = date("d");
         $today = date("Y-m-d");
         foreach($data as $k => $v) {
@@ -166,41 +161,43 @@ class calendar_table
         if(!$html) {
             return $data;
         }
-        $vue->data("calendar_year", $year);
-        $vue->data("calendar_year_list", "js:".json_encode($year_list));
-        $vue->data("calendar_month", date("m", strtotime("2024-".$month)));
-        $vue->data("calendar_month_list", "js:".json_encode($month_list));
-        $vue->data("calendar_lookup_i", $lookup_i);
-        $vue->data("calendar_lookup", "js:".json_encode($lookup));
-        $vue->data($vue_data_name, "js:".json_encode($data));
-        $vue->method("click_calendar_month(num)", "
-            $.post('".$url."',{year:this.calendar_year,month:this.calendar_month,type:num},function(res){
-                app.".$vue_data_name." = res.data;
-                app.calendar_year = res.year;
-                app.calendar_month = res.month; 
-                app.\$forceUpdate();
-            },'json');
-        ");
-        $vue->method("click_calendar_change()", "
-            $.post('".$url."',{year:this.calendar_year,month:this.calendar_month},function(res){
-                app.".$vue_data_name." = res.data;
-                app.calendar_year = res.year;
-                app.calendar_month = res.month; 
-                app.\$forceUpdate();
-            },'json');
-        ");
-        $vue->data("calendar_click_li_actived", '');
-        $vue->data("calendar_table_show", false);
-        $vue->created(["calendar_table_init()"]);
-        $vue->method("calendar_table_init()", "
-            $.post('".$url."',{year:this.calendar_year,month:this.calendar_month},function(res){
-                app.".$vue_data_name." = res.data;
-                app.calendar_year = res.year;
-                app.calendar_month = res.month; 
-                app.calendar_table_show = true;
-                app.\$forceUpdate();
-            },'json');
-        ");
+        if($vue) {
+            $vue->data("calendar_year", $year);
+            $vue->data("calendar_year_list", "js:".json_encode($year_list));
+            $vue->data("calendar_month", date("m", strtotime("2024-".$month)));
+            $vue->data("calendar_month_list", "js:".json_encode($month_list));
+            $vue->data("calendar_lookup_i", $lookup_i);
+            $vue->data("calendar_lookup", "js:".json_encode($lookup));
+            $vue->data($vue_data_name, "js:".json_encode($data));
+            $vue->method("click_calendar_month(num)", "
+                $.post('".$url."',{year:this.calendar_year,month:this.calendar_month,type:num},function(res){
+                    app.".$vue_data_name." = res.data;
+                    app.calendar_year = res.year;
+                    app.calendar_month = res.month; 
+                    app.\$forceUpdate();
+                },'json');
+            ");
+            $vue->method("click_calendar_change()", "
+                $.post('".$url."',{year:this.calendar_year,month:this.calendar_month},function(res){
+                    app.".$vue_data_name." = res.data;
+                    app.calendar_year = res.year;
+                    app.calendar_month = res.month; 
+                    app.\$forceUpdate();
+                },'json');
+            ");
+            $vue->data("calendar_click_li_actived", '');
+            $vue->data("calendar_table_show", false);
+            $vue->created(["calendar_table_init()"]);
+            $vue->method("calendar_table_init()", "
+                $.post('".$url."',{year:this.calendar_year,month:this.calendar_month},function(res){
+                    app.".$vue_data_name." = res.data;
+                    app.calendar_year = res.year;
+                    app.calendar_month = res.month; 
+                    app.calendar_table_show = true;
+                    app.\$forceUpdate();
+                },'json');
+            ");
+        }
         ob_start();
         ?>
 <div class="calendar_filter">
