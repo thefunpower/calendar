@@ -123,6 +123,7 @@ class calendar_table
                 $tip = '';
                 $date = $vv['year'].'-'.$vv['month'].'-'.$vv['date'];
                 $date = date("Y-m-d", strtotime($date));
+                $type = 'work';
                 if($vv['month'] < $month) {
                     $month_tip = '上月';
                     $append_class =  ' gray ';
@@ -139,19 +140,23 @@ class calendar_table
                 }
                 if($vv['is_weekend']) {
                     $class .= " weekend ";
+                    $type = 'weekend';
                     if($workday && in_array($date, $workday)) {
                         $class = 'holiday holiday-work ';
                         $tip = "班";
+                        $type = 'work';
                     }
                 }
                 if($holiday && in_array($date, $holiday)) {
                     $class = ' holiday ';
                     $tip = "休";
+                    $type = 'holiday';
                 }
                 $actived = false;
                 if($vv['date'] == date("d")) {
                     $actived = true;
                 }
+                $data[$k][$kk]['flag'] = $type;
                 $data[$k][$kk]['month_tip'] = $month_tip;
                 $data[$k][$kk]['tip'] = $tip;
                 $data[$k][$kk]['actived'] = $actived;
@@ -224,14 +229,14 @@ class calendar_table
     </ul>
     <ul v-for="v in <?=$vue_data_name?>">
         <li :class="vv.class" v-for="vv in v">
-            <div v-if="vv.actived==1" class="actived" <?php if($click) {?>@click="<?=$click?>(vv.full)" <?php }?>
+            <div v-if="vv.actived==1" class="actived" <?php if($click) {?>@click="<?=$click?>(vv)" <?php }?>
                 :title="vv.full">
                 <b>{{vv.date}}</b>
                 <i v-if="vv.title">{{vv.title}}</i>
                 <u v-if="vv.tip">{{vv.tip}}</u>
             </div>
             <div :class="calendar_click_li_actived==vv.full?'active':''  || vv.actived==1?'actived':''" v-else
-                <?php if($click) {?>@click="<?=$click?>(vv.full)" <?php }?> :title="vv.full">
+                <?php if($click) {?>@click="<?=$click?>(vv)" <?php }?> :title="vv.full">
                 <b>{{vv.date}}</b>
                 <i v-if="vv.title">{{vv.title}}</i>
                 <u v-if="vv.tip">{{vv.tip}}</u>
