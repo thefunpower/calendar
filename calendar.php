@@ -81,11 +81,11 @@ class calendar_table
             '02' => '2月',
             '03' => '3月',
             '04' => '4月',
-            '5' => '5月',
-            '6' => '6月',
-            '7' => '7月',
-            '8' => '8月',
-            '9' => '9月',
+            '05' => '5月',
+            '06' => '6月',
+            '07' => '7月',
+            '08' => '8月',
+            '09' => '9月',
             '10' => '10月',
             '11' => '11月',
             '12' => '12月',
@@ -170,7 +170,6 @@ class calendar_table
             $vue->data("calendar_year", $year);
             $vue->data("calendar_year_list", "js:".json_encode($year_list));
             $vue->data("calendar_month", date("m", strtotime("2024-".$month)));
-            $vue->data("calendar_month_list", "js:".json_encode($month_list));
             $vue->data("calendar_lookup_i", $lookup_i);
             $vue->data("calendar_lookup", "js:".json_encode($lookup));
             $vue->data($vue_data_name, "js:".json_encode($data));
@@ -212,8 +211,10 @@ class calendar_table
     </el-select>
     <i class="el-icon-arrow-left" style="cursor:pointer;" @click="click_calendar_month(-1)"></i>
     <el-select v-model="calendar_month" @change="click_calendar_change" placeholder="月" style="width: 80px;">
-        <el-option v-for="(v,k) in calendar_month_list" :key="k" :label="v" :value="k">
+        <?php foreach($month_list as $k => $v) {?>
+        <el-option key="<?=$k?>" label="<?=$v?>" value="<?=$k?>">
         </el-option>
+        <?php }?>
     </el-select>
     <i class="el-icon-arrow-right" style="cursor:pointer;" @click="click_calendar_month(+1)"></i>
 </div>
