@@ -278,6 +278,20 @@ class calendar_table
         return $cur;
     }
     /**
+    * 某天是否是周末
+    */
+    public static function is_weekend($date)
+    {
+        $w = date("w", strtotime($date));
+        $workday = self::get("usually") ?: [1,2,3,4,5];
+        $weekend = array_diff([1,2,3,4,5,6,0], $workday);
+        if(in_array($w, $weekend)) {
+            return true;
+        }else{
+           return false; 
+        } 
+    }
+    /**
      * 生成某年某月的周数组
      */
     public static function gen_calendar($year, $month)
