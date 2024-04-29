@@ -7,6 +7,8 @@
 class calendar_table
 {
     public static $_data;
+    //纯净模式，不显示不在当月的日期
+    public static $pure = true;
 
     public static function set($key, $value)
     {
@@ -275,6 +277,18 @@ class calendar_table
                 }
             }
         }
+        if(self::$pure) {
+            foreach($cur as $k => $v) {
+                foreach($v as $kk => $vv) {
+                    if($vv['year'] == $year && $vv['month'] == $month) {
+
+                    } else {
+                        $cur[$k][$kk] = [];
+                    }
+                }
+            }
+        }
+
         return $cur;
     }
     /**
@@ -287,9 +301,9 @@ class calendar_table
         $weekend = array_diff([1,2,3,4,5,6,0], $workday);
         if(in_array($w, $weekend)) {
             return true;
-        }else{
-           return false; 
-        } 
+        } else {
+            return false;
+        }
     }
     /**
      * 生成某年某月的周数组

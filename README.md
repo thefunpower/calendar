@@ -29,6 +29,7 @@ $calendar = calendar_table::create([
 ]); 
 
 $vue->method("calendar(date)"," 
+  if(!date.date){return;}
   this.calendar_click_li_actived = date;
   console.log(date);
 "); 
