@@ -1,7 +1,6 @@
 <?php
 /**
- * 日历
- * @author ken <yiiphp@foxmail.com>
+ * 日历 
  */
 
 class calendar_table
@@ -17,12 +16,12 @@ class calendar_table
 
     public static function get($key)
     {
-        return self::$_data[$key];
+        return self::$_data[$key]??'';
     }
 
     /**
      * 日历
-     * @author ken <yiiphp@foxmail.com>
+     *  
      */
     public static function ajax($opt = [])
     {
@@ -69,11 +68,11 @@ class calendar_table
     public static function create($opt)
     {
         global $vue;
-        $url   = $opt['url'] ?: self::get('url');
+        $url   = $opt['url'] ?? self::get('url');
         $year  = $opt['year'];
         $month = $opt['month'];
-        $vue_data_name = $opt['vue_data_name'] ?: "calendar_data";
-        $year_list = $opt['year_list'] ?: [
+        $vue_data_name = $opt['vue_data_name'] ?? "calendar_data";
+        $year_list = $opt['year_list'] ?? [
             date("Y", strtotime("-1 year")),
             date("Y"),
             date("Y", strtotime("+1 year")),
@@ -112,17 +111,20 @@ class calendar_table
         $usually = self::get('usually') ?: [1,2,3,4,5];
         $holiday = self::get('holiday');
         $workday = self::get('workday');
-        $html  = $opt['html'];
-        $click = $opt['click'];
+        $html  = $opt['html']??'';
+        $click = $opt['click']??'';
         $data = self::gen_calendar_data($year, $month);
         $d = date("d");
-        $today = date("Y-m-d");
+        $today = date("Y-m-d");  
         foreach($data as $k => $v) {
             foreach($v as $kk => $vv) {
                 $class = '';
                 $month_tip = '';
                 $append_class = '';
                 $tip = '';
+                if(!$vv){
+                    continue;
+                }
                 $date = $vv['year'].'-'.$vv['month'].'-'.$vv['date'];
                 $date = date("Y-m-d", strtotime($date));
                 $type = 'work';
@@ -177,18 +179,18 @@ class calendar_table
             $vue->data($vue_data_name, "js:".json_encode($data));
             $vue->method("click_calendar_month(num)", "
                 $.post('".$url."',{year:this.calendar_year,month:this.calendar_month,type:num},function(res){
-                    app.".$vue_data_name." = res.data;
-                    app.calendar_year = res.year;
-                    app.calendar_month = res.month; 
-                    app.\$forceUpdate();
+                    _this.".$vue_data_name." = res.data;
+                    _this.calendar_year = res.year;
+                    _this.calendar_month = res.month; 
+                    _this.\$forceUpdate();
                 },'json');
             ");
             $vue->method("click_calendar_change()", "
                 $.post('".$url."',{year:this.calendar_year,month:this.calendar_month},function(res){
-                    app.".$vue_data_name." = res.data;
-                    app.calendar_year = res.year;
-                    app.calendar_month = res.month; 
-                    app.\$forceUpdate();
+                    _this.".$vue_data_name." = res.data;
+                    _this.calendar_year = res.year;
+                    _this.calendar_month = res.month; 
+                    _this.\$forceUpdate();
                 },'json');
             ");
             $vue->data("calendar_click_li_actived", '');
@@ -196,11 +198,11 @@ class calendar_table
             $vue->created(["calendar_table_init()"]);
             $vue->method("calendar_table_init()", "
                 $.post('".$url."',{year:this.calendar_year,month:this.calendar_month},function(res){
-                    app.".$vue_data_name." = res.data;
-                    app.calendar_year = res.year;
-                    app.calendar_month = res.month; 
-                    app.calendar_table_show = true;
-                    app.\$forceUpdate();
+                    _this.".$vue_data_name." = res.data;
+                    _this.calendar_year = res.year;
+                    _this.calendar_month = res.month; 
+                    _this.calendar_table_show = true;
+                    _this.\$forceUpdate();
                 },'json');
             ");
         }
