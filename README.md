@@ -25,7 +25,8 @@ $calendar = calendar_table::create([
   'year'=>$year,
   'month'=>$month, 
   'html'=>1,
-  'click'=>'calendar', 
+  'click'=>'calendar',
+  'change'=>'load'
 ]); 
 
 $vue->method("calendar(date)"," 
