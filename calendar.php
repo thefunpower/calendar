@@ -1,6 +1,7 @@
 <?php
 /**
- * 日历 
+ * 日历
+ * @author ken <yiiphp@foxmail.com>
  */
 
 class calendar_table
@@ -71,6 +72,7 @@ class calendar_table
         $url   = $opt['url'] ?? self::get('url');
         $year  = $opt['year'];
         $month = $opt['month'];
+        $change = $opt['change']??'';
         $vue_data_name = $opt['vue_data_name'] ?? "calendar_data";
         $year_list = $opt['year_list'] ?? [
             date("Y", strtotime("-1 year")),
@@ -177,11 +179,15 @@ class calendar_table
             $vue->data("calendar_lookup_i", $lookup_i);
             $vue->data("calendar_lookup", "js:".json_encode($lookup));
             $vue->data($vue_data_name, "js:".json_encode($data));
+            if($change){
+                $change = "_this.".$change."()";
+            }
             $vue->method("click_calendar_month(num)", "
                 $.post('".$url."',{year:this.calendar_year,month:this.calendar_month,type:num},function(res){
                     _this.".$vue_data_name." = res.data;
                     _this.calendar_year = res.year;
                     _this.calendar_month = res.month; 
+                    ".$change."
                     _this.\$forceUpdate();
                 },'json');
             ");
@@ -190,6 +196,7 @@ class calendar_table
                     _this.".$vue_data_name." = res.data;
                     _this.calendar_year = res.year;
                     _this.calendar_month = res.month; 
+                    ".$change."
                     _this.\$forceUpdate();
                 },'json');
             ");
